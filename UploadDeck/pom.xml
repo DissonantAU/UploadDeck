@@ -1,0 +1,20 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.dissonantau</groupId>
+  <artifactId>UploadDeck</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>UploadDeck</name>
+  <description>Batch Upload tool for uploading multiple Images to multiple Image/Social Media Sites</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.restfb</groupId>
+  		<artifactId>restfb</artifactId>
+  		<version>1.46.0</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>net.sourceforge.htmlunit</groupId>
+  		<artifactId>htmlunit</artifactId>
+  		<version>2.27</version>
+  	</dependency>
+  </dependencies>
+</project>
