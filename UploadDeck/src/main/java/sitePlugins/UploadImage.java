@@ -1,5 +1,5 @@
 package sitePlugins;
 
-public class UploadStatus {
+public class UploadImage {
 
 }
