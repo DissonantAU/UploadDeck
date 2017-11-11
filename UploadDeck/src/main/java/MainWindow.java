@@ -4,25 +4,10 @@ import javax.swing.JFrame;
 import javax.swing.JToolBar;
 import java.awt.BorderLayout;
 import javax.swing.JSplitPane;
-import javax.swing.JScrollPane;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.BoxLayout;
-import java.awt.Component;
-import javax.swing.Box;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.JTabbedPane;
 import java.awt.Dimension;
-import javax.swing.SpringLayout;
-import net.miginfocom.swing.MigLayout;
 import uiComponents.jobPanel;
 import uiComponents.postPane;
 
-import javax.swing.SwingConstants;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.JTable;
 
 
 public class MainWindow {

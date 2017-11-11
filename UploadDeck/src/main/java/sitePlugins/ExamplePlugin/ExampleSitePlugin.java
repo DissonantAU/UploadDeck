@@ -1,9 +1,15 @@
 /**
  * 
  */
-package sitePlugins;
+package sitePlugins.ExamplePlugin;
 
 import java.util.HashMap;
+
+import sitePlugins.LoginException;
+import sitePlugins.UploadImage;
+import sitePlugins.UploadResult;
+import sitePlugins.UploadTracker;
+import sitePlugins.Interfaces.PluginInterface;
 
 /**
  * @author Diss
@@ -12,7 +18,7 @@ import java.util.HashMap;
  * Each Plugin Object should hold a single account login and be saveable/loadable
  * The upload process is handled by the plugin
  */
-public class AbstractSitePlugin {
+public class ExampleSitePlugin implements PluginInterface {
 	/**
 	 * Site name - should be site name and unique. Used with UploadImage Object to track versions of images for upload
 	 */
@@ -51,7 +57,7 @@ public class AbstractSitePlugin {
 
 
 
-	public AbstractSitePlugin(){
+	public ExampleSitePlugin(){
 		ImagesToUpload = new HashMap<String,UploadImage>();
 	}
 
@@ -60,68 +66,62 @@ public class AbstractSitePlugin {
 	 * @param isLoggedIn
 	 * @param siteLoginToken
 	 */
-	public AbstractSitePlugin(boolean isLoggedIn, Object siteLoginToken){
+	public ExampleSitePlugin(boolean isLoggedIn, Object siteLoginToken){
 		setLoggedIn(isLoggedIn);
 		setLoginToken(siteLoginToken);
 		ImagesToUpload = new HashMap<String,UploadImage>();
 	}
 
-	/**
-	 * @return the siteName
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#getSiteName()
 	 */
 	public String getSiteName() {
 		return siteName;
 	}
 
-	/**
-	 * @return the maxImagesPerPost
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#getMaxImagesPerPost()
 	 */
 	public int getMaxImagesPerPost() {
 		return maxImagesPerPost;
 	}
 
-	/**
-	 * Gets the minimum wait time between uploads (Seconds)
-	 * @return the uploadWaitTime
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#getUploadWaitTime()
 	 */
 	public int getUploadWaitTime() {
 		return uploadWaitTime;
 	}
 
-	/**
-	 * Gets the data needed to login with, usually for saving
-	 * @return the loginToken
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#getLoginToken()
 	 */
 	public Object getLoginToken() {
 		return loginToken;
 	}
 
-	/**
-	 * Sets the data needed to login with. Should be used when loading.
-	 * @param loginToken the loginToken to set
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#setLoginToken(java.lang.Object)
 	 */
 	public void setLoginToken(Object loginToken) {
 		this.loginToken = loginToken;
 	}
 
-	/**
-	 * Returns whether the plugin has a working login.
-	 * @return the loggedIn
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#isLoggedIn()
 	 */
 	public boolean isLoggedIn() {
 		return loggedIn;
 	}
 
-	/**
-	 * Sets whether logged in value is set, should only be used when loading.
-	 * @param loggedIn the loggedIn to set
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#setLoggedIn(boolean)
 	 */
 	public void setLoggedIn(boolean loggedIn) {
 		this.loggedIn = loggedIn;
 	}
-	/**
-	 * Log into site and 
-	 * @return login success
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#loginSite()
 	 */
 	public boolean loginSite() throws LoginException{
 		setLoggedIn(true);
@@ -131,50 +131,51 @@ public class AbstractSitePlugin {
 
 		return loggedIn;
 	}
-	/** Logout site - ideally log out API/Site then clear Login token and set LoggedIn to false 
-	 * 
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#logoutSite()
 	 */
 	public void logoutSite(){
 		setLoggedIn(false);
 		setLoginToken(null);
 	}
 
-	/**
-	 * Uploads file and returns result
-	 * Use UploadStatus returned by prepareUpload to track upload
-	 * @param tracker object implementing UploadTracker which should be notified of progress 
-	 * @return
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#executeUpload(sitePlugins.UploadTracker)
 	 */
 	public void executeUpload(UploadTracker tracker){
 		uploadStatusTracker = tracker;
 	}
 	
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#updateUploadStatus()
+	 */
 	public void updateUploadStatus(){
 		
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#finishUpload()
+	 */
 	public void finishUpload(){
 		boolean resultSuccess = false;
 		String postURL = "";
 
 
-		UploadResult result =new UploadResult(resultSuccess, postURL);
+		UploadResult result = new UploadResult(resultSuccess, postURL);
 		// Push result
 		uploadStatusTracker.uploadFinished(result);
-
-
 	}
 
-	/**
-	 * @return the jobName
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#getJobName()
 	 */
 	public String getJobName() {
 		return jobName;
 	}
 
-	/**
-	 * @param jobName the jobName to set
+	/* (non-Javadoc)
+	 * @see sitePlugins.PluginInterface#setJobName(java.lang.String)
 	 */
 	public void setJobName(String jobName) {
 		this.jobName = jobName;

@@ -20,9 +20,6 @@ public class jobPanel extends JPanel {
 					btnUploadJobAdd,
 					btnUploadJobDel;
 
-	final String[] jobColumnNames = {"Name","Status"};
-
-
 	public jobPanel() {
 		super(new BorderLayout());
 		this.setMinimumSize(new Dimension(250, 300));
@@ -62,14 +59,17 @@ public class jobPanel extends JPanel {
 
 	private static Object[][] initJobList(){
 		Object[][] jobList = {
-				{"No Image Selected",new Boolean(false), "Not selected"}
+				{"New Post","Not Ready"}
 		};
 
 		return jobList;
 	}
 
 	class JobTableModel extends AbstractTableModel {
-		private String[] columnNames = jobColumnNames;
+		/* Name : text
+		 * Status : text
+		 */	
+		final private String[] columnNames = {"Name","Status"};
 		private Object[][] data = initJobList();
 
 		public int getColumnCount() {
