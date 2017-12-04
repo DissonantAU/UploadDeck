@@ -22,11 +22,11 @@ public class ExampleSitePlugin implements PluginInterface {
 	/**
 	 * Site name - should be site name and unique. Used with UploadImage Object to track versions of images for upload
 	 */
-	static private String siteName = "Site Name";
+	static private String siteName = "Example Name";
 	/**
 	 * Name to display - should default to site name, but may be changed if multiple account are set up
 	 */
-	private String jobName = siteName;
+	private String jobName = "New Job";
 	/**
 	 * Max number of images that can be upload per post.
 	 * Some sites allow multiple images to be attached to a post.

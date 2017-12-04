@@ -34,4 +34,17 @@ public interface postTab {
 	 * 0 is General, 1 is Mature, 2 is Adult
 	 */
 	public void updateRating(int rating);
+	
+	/**
+	 * Triggered when site is enabled for post
+	 */
+	public void enableTab();
+	
+	/**
+	 * Triggered when site is disabled for post
+	 * Should return same Tab and values used as earlier and update
+	 */
+	public postTab disableTab();
+	
+	
 }
