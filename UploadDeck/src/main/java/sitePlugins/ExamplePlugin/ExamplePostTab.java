@@ -30,13 +30,11 @@ public class ExamplePostTab extends JPanel implements postTab {
 	private JComboBox<String> comboRating;
 	private JTextArea textDescription;
 	
-	final private String[] ratingStrings = {"General Audience","Mature Audience","Adult Audience"};
+	final private String[] ratingStrings = {"General","Mature","Adult"};
 
 	public ExamplePostTab() {
 		initPane();
 	}
-
-	
 	
 	public void updateTitle(String text) {
 		// TODO Auto-generated method stub

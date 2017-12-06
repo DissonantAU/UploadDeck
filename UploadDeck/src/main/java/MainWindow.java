@@ -2,6 +2,9 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JToolBar;
+
+import containers.JobContainer;
+
 import java.awt.BorderLayout;
 import javax.swing.JSplitPane;
 import java.awt.Dimension;
@@ -14,12 +17,14 @@ public class MainWindow {
 
 	private JFrame frame;
 
+	private static JobContainer jobData;
 
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		initData();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -32,7 +37,15 @@ public class MainWindow {
 		});
 	}
 
-
+	/**
+	 * Initalise Data - Load settings, any saved posts (or create a generic empty post)
+	 */
+	private static void initData(){
+		jobData = new JobContainer();
+		
+	}
+	
+	
 	/**
 	 * Create the application.
 	 */
@@ -58,7 +71,7 @@ public class MainWindow {
 
 
 		// Table of Post Jobs - Selecting one should update the Post Pane to show which one was selected
-		jobPanel uploadJobPane = new jobPanel();
+		jobPanel uploadJobPane = new jobPanel(jobData);
 		splitPaneHorizontal.setLeftComponent(uploadJobPane);
 
 

@@ -3,23 +3,48 @@ package uiComponents;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
+import containers.PostContainer;
+import containers.JobContainer;
 
-public class jobPanel extends JPanel {
+
+public class jobPanel extends JPanel implements ActionListener, ListSelectionListener {
+	
+	final private String AC_New = "ACNEW";
+	final private String AC_Delete = "ACDELETE";
+	final private String AC_Options = "ACOPTIONS";
+	
+	
+	
+	private JobContainer jobDataContainer;
+	
+	private int selectedTableRow;
+	
 
 	//Table which will hold all Post Jobs
 	private JTable uploadJobTable;
+	private JobTableModel uploadTableModel;
 	
 	private JButton btnUploadJobOption, 
 					btnUploadJobAdd,
 					btnUploadJobDel;
+	
 
+	
+	
+	
+	
 	public jobPanel() {
 		super(new BorderLayout());
 		this.setMinimumSize(new Dimension(250, 300));
@@ -27,13 +52,27 @@ public class jobPanel extends JPanel {
 	}
 
 
+	public jobPanel(JobContainer jobData) {
+		super(new BorderLayout());
+		this.setMinimumSize(new Dimension(250, 300));
+		initJobPanel();
+		jobDataContainer = jobData;
+		
+		//Select First Row in Table
+		selectedTableRow=0;
+		uploadJobTable.setRowSelectionInterval(selectedTableRow, selectedTableRow);
+	}
+
+
 	private void initJobPanel(){
 
 		//Create Post Job Panel and put into a Scroll Pane
-		uploadJobTable = new JTable(new JobTableModel());
+		uploadTableModel = new JobTableModel();
+		uploadJobTable = new JTable(uploadTableModel);
 		uploadJobTable.setPreferredScrollableViewportSize(new Dimension(200, 200));
 		uploadJobTable.setMinimumSize(new Dimension(200, 200));
 		uploadJobTable.setFillsViewportHeight(true);
+		uploadJobTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		JScrollPane uploadJobTableScrollPane = new JScrollPane(uploadJobTable);
 		uploadJobTableScrollPane.setMinimumSize(new Dimension(120, 120));
@@ -44,40 +83,91 @@ public class jobPanel extends JPanel {
 		JobSiteButtonPanel.setLayout(new FlowLayout(FlowLayout.TRAILING, 5, 5));
 
 		btnUploadJobAdd = new JButton("New");
+		btnUploadJobAdd.setActionCommand(AC_New);
+		btnUploadJobAdd.addActionListener(this);
+		
 		btnUploadJobDel = new JButton("Delete");
+		btnUploadJobDel.setActionCommand(AC_Delete);
+		btnUploadJobDel.addActionListener(this);
+		
 		btnUploadJobOption = new JButton("Options");
+		btnUploadJobOption.setActionCommand(AC_Options);
+		btnUploadJobOption.addActionListener(this);
 		
 		JobSiteButtonPanel.add(btnUploadJobAdd);
 		JobSiteButtonPanel.add(btnUploadJobDel);
 		JobSiteButtonPanel.add(btnUploadJobOption);
+		
+		//Setup Selection Listener for Table
+		uploadJobTable.getSelectionModel().addListSelectionListener(this);
+
 
 		// Add to Master JPanel and return
 		this.add(uploadJobTableScrollPane, BorderLayout.CENTER);
 		this.add(JobSiteButtonPanel, BorderLayout.SOUTH);
 
 	}
+	
+	// ##### ACTION LISTNENERS #####
+	
+	public void actionPerformed(ActionEvent e) {
+		if (e.getActionCommand() == AC_New){
+			System.out.println("Job Panel - New Pressed");
+			jobDataContainer.createBlankJob();
+			selectedTableRow++;
+			//Update Table
+			uploadTableModel.fireTableDataChanged();
+		}else if (e.getActionCommand() == AC_Delete){
+			System.out.println("Job Panel - Delete Pressed");
+			int selectedRow = uploadJobTable.getSelectedRow();
+			if (selectedRow ==-1){
+				//Do nothing, no job selected
+			}else{
+				//Delete Selected Job
+				jobDataContainer.deleteJob(selectedTableRow);
+				selectedTableRow--;
+				
+				// If now Jobs left, make a blank one
+				if (jobDataContainer.count()==0){
+					jobDataContainer.createBlankJob();
+					selectedTableRow=0;
+				}
+				//Update Table
+				uploadTableModel.fireTableDataChanged();
+			}
+	
+		} else if (e.getActionCommand() == AC_Options){
+			System.out.println("Job Panel - Options Pressed");
+		} else {
+			System.out.println("Job Panel - Unknown Pressed");
+		}
 
-	private static Object[][] initJobList(){
-		Object[][] jobList = {
-				{"New Post","Not Ready"}
-		};
+	} 
+	
+	public void valueChanged(ListSelectionEvent event) {
+		int selectedRow = uploadJobTable.getSelectedRow();
+		if (selectedRow ==-1){
+			uploadJobTable.setRowSelectionInterval(selectedTableRow, selectedTableRow);
+		}else{
+			selectedTableRow = selectedRow;
+			System.out.println("Job Panel - Selected '" + uploadJobTable.getValueAt(selectedRow, 0).toString()+"' at row " + selectedRow);
+		}
+    }
 
-		return jobList;
-	}
-
+	// ##### ACTION LISTNENERS #####
+	
 	class JobTableModel extends AbstractTableModel {
-		/* Name : text
+		/* Title : text
 		 * Status : text
 		 */	
-		final private String[] columnNames = {"Name","Status"};
-		private Object[][] data = initJobList();
+		final private String[] columnNames = {"Title","Status"};
 
 		public int getColumnCount() {
 			return columnNames.length;
 		}
 
 		public int getRowCount() {
-			return data.length;
+			return jobDataContainer.count();
 		}
 
 		public String getColumnName(int col) {
@@ -85,16 +175,15 @@ public class jobPanel extends JPanel {
 		}
 
 		public Object getValueAt(int row, int col) {
-			return data[row][col];
+			PostContainer job = jobDataContainer.getJob(row);
+			if (col==1){
+				return job.getStatus();
+			}
+			return job.getTitle();
 		}
 
 		public Class getColumnClass(int c) {
 			return getValueAt(0, c).getClass();
-		}
-
-		public void setValueAt(Object value, int row, int col) {
-			data[row][col] = value;
-			fireTableCellUpdated(row, col);
 		}
 	}
 

@@ -38,25 +38,15 @@ public class postPane extends JSplitPane {
 	//Image display - label used to display image(s)
 	private JLabel postImage;
 	
-	
-	// Rating Combo box
-	JComboBox<String> comboRating;
-	
-	
-	// Combo Box Values
-	// Should be 0 - General, 1 - Mature, 2 - Adult
-	final private String[] ratingStrings = {"General Audience","Mature Audience","Adult Audience"};
-	
-	
-	//postTab objects - visual object updates are triggered on these to update text, etc.
-	ArrayList<postTab> postTabs;
-	
 
 	//List to display/set which sites the post is uploaded to
 	private JTable JobSiteTable;
-	private JTextField textTitle;
-	private JTextField textTags;
-	private JTextArea textDescription;
+	
+	//postTab objects - visual object updates are triggered on these to update text, etc.
+	private ArrayList<postTab> postTabs;
+	
+
+
 
 	public postPane() {
 		super(JSplitPane.VERTICAL_SPLIT);
@@ -70,98 +60,18 @@ public class postPane extends JSplitPane {
 	}
 
 	private void initBottomPane(){
-		// Create a General Info Panel
-		JPanel TabGenericInfoPanel = new JPanel();
-		TabGenericInfoPanel.setMinimumSize(new Dimension(100, 100));
-		TabGenericInfoPanel.setLayout(new MigLayout("", "[][grow]", "[][grow][][][]"));
 		
-		// Title. Used for Post Job Name field
-		JLabel lblTitle = new JLabel("Title");
-		TabGenericInfoPanel.add(lblTitle, "cell 0 0,alignx trailing");
-		
-		textTitle = new JTextField();
-		TabGenericInfoPanel.add(textTitle, "cell 1 0,growx");
-		
-		// Post Text field and label (aka description)
-		JLabel lblPostText = new JLabel("Description");
-		TabGenericInfoPanel.add(lblPostText, "cell 0 1,alignx trailing");
-		
-		textDescription = new JTextArea();
-		textDescription.setLineWrap(true);
-		textDescription.setRows(8);
-		TabGenericInfoPanel.add(textDescription, "cell 1 1,grow");
-		
-		// Tag box and label. (Tags should be separated by commas)
-		JLabel lblTags = new JLabel("Tags");
-		TabGenericInfoPanel.add(lblTags, "cell 0 2,alignx trailing");
-		
-		textTags = new JTextField();
-		TabGenericInfoPanel.add(textTags, "cell 1 2,growx");
-		
-		// Rating Drop Down box and label
-		JLabel lblRating = new JLabel("Rating");
-		TabGenericInfoPanel.add(lblRating, "cell 0 3,alignx trailing");
-		
-		
-		comboRating = new JComboBox<String>(new DefaultComboBoxModel<String>(ratingStrings));
-		TabGenericInfoPanel.add(comboRating, "cell 1 3,growx");
-
 		//Init postTab ArrayList
 		postTabs = new ArrayList<postTab>();
+		
+		//Init Generic Tab
+		GenericPostTab genPostTab = new GenericPostTab();
 		
 		//Set up tabs and add panels
 		jobTabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
 		jobTabbedPane.setMinimumSize(new Dimension(200, 100));
-		jobTabbedPane.addTab("General", null, TabGenericInfoPanel, "Info entered here is copied to the other sites");
+		jobTabbedPane.addTab("General", null, genPostTab, "Info entered here is copied to the other sites");
 		
-		
-		
-		
-		//Focus Listeners, for when box is deselected (Trigger updates, etc.)
-
-		textTitle.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				String text = textTitle.getText();
-				//Push update to each tab
-				for (postTab tab:postTabs){
-					tab.updateTitle(text);
-				}
-			}
-		});
-		
-		textDescription.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				String text = textDescription.getText();
-				//Push update to each tab
-				for (postTab tab:postTabs){
-					tab.updateDescription(text);
-				}
-			}
-		});
-		
-		textTags.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				String text = textTags.getText();
-				//Push update to each tab
-				for (postTab tab:postTabs){
-					tab.updateTags(text);
-				}
-			}
-		});
-		
-		comboRating.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusLost(FocusEvent e) {
-				int val = comboRating.getSelectedIndex();
-				//Push update to each tab
-				for (postTab tab:postTabs){
-					tab.updateRating(val);
-				}
-			}
-		});
 	}
 
 	private void initTopPane(){

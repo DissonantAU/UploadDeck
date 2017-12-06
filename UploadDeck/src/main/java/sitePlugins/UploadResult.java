@@ -4,7 +4,7 @@ public class UploadResult{
 	private boolean Success = false;
 	private String postURL = null;
 	
-	UploadResult(boolean wasSuccessful, String PostURL){
+	public UploadResult(boolean wasSuccessful, String PostURL){
 		Success = wasSuccessful;
 		postURL = PostURL;
 	}
