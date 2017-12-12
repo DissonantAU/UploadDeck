@@ -159,7 +159,9 @@ public class jobPanel extends JPanel implements ActionListener, ListSelectionLis
 	class JobTableModel extends AbstractTableModel {
 		/* Title : text
 		 * Status : text
-		 */	
+		 */
+		
+		
 		final private String[] columnNames = {"Title","Status"};
 
 		public int getColumnCount() {
@@ -182,7 +184,7 @@ public class jobPanel extends JPanel implements ActionListener, ListSelectionLis
 			return job.getTitle();
 		}
 
-		public Class getColumnClass(int c) {
+		public Class<? extends Object> getColumnClass(int c) {
 			return getValueAt(0, c).getClass();
 		}
 	}

@@ -155,7 +155,7 @@ public class postPane extends JSplitPane {
 			return data[row][col];
 		}
 
-		public Class getColumnClass(int c) {
+		public Class<? extends Object> getColumnClass(int c) {
 			return getValueAt(0, c).getClass();
 		}
 
