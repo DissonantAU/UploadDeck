@@ -69,15 +69,15 @@ public class MainWindow {
 		JSplitPane splitPaneHorizontal = new JSplitPane();
 		frame.getContentPane().add(splitPaneHorizontal, BorderLayout.CENTER);
 
-
-		// Table of Post Jobs - Selecting one should update the Post Pane to show which one was selected
-		jobPanel uploadJobPane = new jobPanel(jobData);
-		splitPaneHorizontal.setLeftComponent(uploadJobPane);
-
-
 		//Pane which represents a Post Job - Images, Text, & sites which will be uploaded to.
 		postPane jobPostPane = new postPane();
 		splitPaneHorizontal.setRightComponent(jobPostPane);
+
+		// Table of Post Jobs - Selecting one should update the Post Pane to show which one was selected
+		jobPanel uploadJobPane = new jobPanel(jobPostPane);
+		uploadJobPane.setData(jobData);
+		splitPaneHorizontal.setLeftComponent(uploadJobPane);
+
 
 	}
 

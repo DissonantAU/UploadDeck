@@ -3,6 +3,8 @@
  */
 package sitePlugins.Interfaces;
 
+import containers.PostContainer;
+
 /**
  * Interface for post tabs.
  * 
@@ -45,6 +47,12 @@ public interface postTab {
 	 * Should return same Tab and values used as earlier and update
 	 */
 	public postTab disableTab();
+
+	/**
+	 * Sets Job Data Container. Should update UI from contents
+	 * @param currentJob
+	 */
+	public void setJob(PostContainer currentJob);
 	
 	
 }

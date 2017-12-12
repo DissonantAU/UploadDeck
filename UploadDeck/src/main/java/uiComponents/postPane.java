@@ -11,21 +11,22 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
+
+import containers.PostContainer;
+
 import java.awt.FlowLayout;
+
 import javax.swing.JButton;
-import net.miginfocom.swing.MigLayout;
 import sitePlugins.Interfaces.postTab;
 
-import javax.swing.JTextField;
-import javax.swing.JTextArea;
-import javax.swing.JComboBox;
-import java.awt.Font;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 
 public class postPane extends JSplitPane {
+	
+	final static private String AC_New = "ACNEW";
+	final static private String AC_Delete = "ACDELETE";
+	final static private String AC_Options = "ACOPTIONS";
+	
 	// Bottom Tab Pane for displaying/entering Post details (Description, Tags, etc.)
 	private JTabbedPane jobTabbedPane;
 
@@ -42,8 +43,18 @@ public class postPane extends JSplitPane {
 	//List to display/set which sites the post is uploaded to
 	private JTable JobSiteTable;
 	
+	
+	//Generic tab for generic data - is treated differently than plugin tabs, but is based on same interface
+	private GenericPostTab genPostTab;
+	
 	//postTab objects - visual object updates are triggered on these to update text, etc.
 	private ArrayList<postTab> postTabs;
+
+	//Container for storing Job data
+	private PostContainer currentJob;
+
+	//Job list UI, call JobUIUpdate() to let it know to update the table on a Name or status change
+	private jobPanel jobPanelListener;
 	
 
 
@@ -65,7 +76,7 @@ public class postPane extends JSplitPane {
 		postTabs = new ArrayList<postTab>();
 		
 		//Init Generic Tab
-		GenericPostTab genPostTab = new GenericPostTab();
+		 genPostTab = new GenericPostTab(this);
 		
 		//Set up tabs and add panels
 		jobTabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
@@ -121,7 +132,52 @@ public class postPane extends JSplitPane {
 
 		return JobUploadPanel;
 	}
+	
+	
+	/**
+	 * Called to set which Job should be displayed
+	 * Is passed post container should be used for storing data
+	 * @param postContainer container which should contain all post data
+	 * @param jobPanel - UI Element, should have JobUIUpdate() called when name or status changes
+	 */
+	public void setJob(PostContainer postContainer, jobPanel jobPanel){
+		currentJob = postContainer;
+		jobPanelListener = jobPanel;
+	}
+	
+	private void updateJob(){
+		
+		
+	}
+	
+	private void updateJobTabs(){
+		//Update generic tab
+		genPostTab.setJob(currentJob);
+		
+		//Get Sites enabled in Job and create tabs
+		currentJob.getPluginData();
+		
+		//Pass Job to tabs
+		for (postTab tab: postTabs){
+			
+			tab.setJob(currentJob);
+		}
+		
+	}
 
+	
+	
+	// ##### UI ACTION LISTNENERS #####
+	
+	
+	
+	// #### Action Functions ####
+	
+	
+	
+	
+	
+	
 	private static Object[][] initJobSiteList(){
 		//Returns all sites that the post can be uploaded to
 		Object[][] jobSiteList = {
@@ -136,6 +192,7 @@ public class postPane extends JSplitPane {
 		/* Name : text
 		 * Status : text
 		 */	
+		
 		final private String[] columnNames = {"Site","Upload","Status"};
 		private Object[][] data = initJobSiteList();
 

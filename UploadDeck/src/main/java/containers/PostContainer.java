@@ -1,6 +1,7 @@
 package containers;
 import java.util.HashMap;
 
+import sitePlugins.Interfaces.PluginData;
 import sitePlugins.Interfaces.PluginInterface;
 
 /**
@@ -26,7 +27,7 @@ public class PostContainer {
 	
 	
 	
-	HashMap<String,PluginInterface> postPlugins;
+	HashMap<String,PluginData> postPluginData;
 	
 	
 	public PostContainer(int PostUUID){
@@ -36,6 +37,7 @@ public class PostContainer {
 		postDescription="";
 		postRating = 0;
 		postStatus = "Not Ready";
+		postPluginData = new HashMap<String, PluginData>();
 	}
 
 	public String getTitle() {
@@ -44,6 +46,11 @@ public class PostContainer {
 
 	public String getStatus() {
 		return postStatus;
+	}
+
+	public HashMap<String, PluginData> getPluginData() {
+		return postPluginData;
+		
 	}
 	
 	

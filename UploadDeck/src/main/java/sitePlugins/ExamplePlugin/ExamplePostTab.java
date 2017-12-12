@@ -9,6 +9,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import containers.PostContainer;
 import sitePlugins.Interfaces.postTab;
 
 import java.awt.Component;
@@ -168,6 +169,12 @@ public class ExamplePostTab extends JPanel implements postTab {
 			}
 		});
 		
+		
+	}
+
+	@Override
+	public void setJob(PostContainer currentJob) {
+		// TODO Auto-generated method stub
 		
 	}
 	
