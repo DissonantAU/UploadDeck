@@ -6,6 +6,7 @@ package uiComponents;
 import java.awt.Dimension;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -25,30 +26,34 @@ import containers.PostContainer;
  * @author Diss
  *
  */
-public class GenericPostTab extends JPanel implements postTab, DocumentListener {
+public class GenericPostTab extends JPanel  implements postTab, DocumentListener, FocusListener {
 	//TabID is used by PostContainer to know where pass info
 	final static private String TabID = "Generic";
 	
 	final static private String FIELD_ID = "FIELD";
 	final static private String FIELD_TITLE = "Title";
-	final static private String FIELD_TEXT = "Text";
+	final static private String FIELD_TEXT = "Description";
 	final static private String FIELD_TAGS = "Tags";
 	
-	// Rating Combo box
-	JComboBox<String> comboRating;
 	
+	//UI Update Tracking
+	private boolean fieldUpdatedTitle, fieldUpdatedText, fieldUpdatedTags;
 	
 	// Combo Box Values
 	// Should be 0 - General, 1 - Mature, 2 - Adult
 	final private String[] ratingStrings = {"General Audience","Mature Audience","Adult Audience"};
 	
-
+	// UI Elements
 	private JTextField textTitle;
 	private JTextField textTags;
 	private JTextArea textDescription;
 	
-	//COntatins post data
-	private PostContainer post;
+	// Rating Combo box
+	private JComboBox<String> comboRating;
+	
+	
+	//Contains post data
+	private PostContainer postDataContainer;
 	
 	//UI element that contains this tab. Should be passed UI update events
 	private postPane PostPane;
@@ -70,6 +75,8 @@ public class GenericPostTab extends JPanel implements postTab, DocumentListener 
 		TabGenericInfoPanel.add(lblTitle, "cell 0 0,alignx trailing");
 		
 		textTitle = new JTextField();
+		textTitle.addFocusListener(this);
+		fieldUpdatedTitle=false;
 		textTitle.getDocument().addDocumentListener(this);
 		textTitle.getDocument().putProperty(FIELD_ID, FIELD_TITLE);
 		TabGenericInfoPanel.add(textTitle, "cell 1 0,growx");
@@ -81,6 +88,8 @@ public class GenericPostTab extends JPanel implements postTab, DocumentListener 
 		textDescription = new JTextArea();
 		textDescription.setLineWrap(true);
 		textDescription.setRows(8);
+		textDescription.addFocusListener(this);
+		fieldUpdatedText=false;
 		textDescription.getDocument().addDocumentListener(this);
 		textDescription.getDocument().putProperty(FIELD_ID, FIELD_TEXT);
 		TabGenericInfoPanel.add(textDescription, "cell 1 1,grow");
@@ -90,6 +99,8 @@ public class GenericPostTab extends JPanel implements postTab, DocumentListener 
 		TabGenericInfoPanel.add(lblTags, "cell 0 2,alignx trailing");
 		
 		textTags = new JTextField();
+		textTags.addFocusListener(this);
+		fieldUpdatedTags=false;
 		textTags.getDocument().addDocumentListener(this);
 		textTags.getDocument().putProperty(FIELD_ID, FIELD_TAGS);
 		TabGenericInfoPanel.add(textTags, "cell 1 2,growx");
@@ -155,71 +166,94 @@ public class GenericPostTab extends JPanel implements postTab, DocumentListener 
 	}
 
 	public void setJob(PostContainer currentJob) {
-		post = currentJob;
+		postDataContainer = currentJob;
 		//TODO Update elements
 	}
 	
+	// ## Field Change Methods
+	
+	private void fieldUpdated(Object fieldUpdated){
+		System.out.println("fieldUpdated: '" + FIELD_ID + "' = " + fieldUpdated);
+
+		if (fieldUpdated == FIELD_TITLE){
+			//Title Updated
+			fieldUpdatedTitle=true;
+		}else if (fieldUpdated == FIELD_TEXT){
+			//Description Updated
+			fieldUpdatedText=true;
+		}else if (fieldUpdated == FIELD_TAGS){
+			//Tags Updated
+			fieldUpdatedTags=true;
+		}
+	}
+	
+	/**
+	 * Checks if filed has been marked dirty, passes updated value to postPane and updated postContainer
+	 * @param updateSource
+	 */
+	private void fieldUpdateCheck(Object updateSource){
+		if (updateSource==textTitle && fieldUpdatedTitle){
+			//if Title Field was updated
+			postDataContainer.setTitle(textTitle.getText());
+
+			fieldUpdatedTitle=false;
+		} else if (updateSource==textDescription && fieldUpdatedText){
+			//if Description Field was updated
+			postDataContainer.setDescription(textDescription.getText());
+			
+			fieldUpdatedText=false;
+		} else if (updateSource==textTags && fieldUpdatedTags){
+			//if Tag Field was updated
+			postDataContainer.setTags(textTags.getText());
+
+			fieldUpdatedTags=false;
+		}
+				
+		
+	}
+	
+	// #### EVENT LISTENER METHODS ####
+	// ## Document Listener Events ##
 
 	@Override
 	public void changedUpdate(DocumentEvent arg0) {
-		// TODO Auto-generated method stub
-		Object owner = arg0.getDocument().getProperty(FIELD_ID);
-		System.out.println("GenericPostTab - Document: changedUpdate '" + FIELD_ID+"' = "+owner);
-
-		if (owner ==FIELD_TITLE){
-			//Title Updated
-			System.out.println("GenericPostTab - Document: changedUpdate triggered by "+FIELD_TITLE);
-			
-		}else if (owner == FIELD_TEXT){
-			//Text Updated
-			System.out.println("GenericPostTab - Document: changedUpdate triggered by "+FIELD_TITLE);
-			
-		}else if (owner == FIELD_TAGS){
-			//Tags Updated
-			System.out.println("GenericPostTab - Document: changedUpdate triggered by "+FIELD_TITLE);
-			
-		}
+		Object fieldUpdated = arg0.getDocument().getProperty(FIELD_ID);
+		System.out.println("GenericPostTab - Document: changedUpdate '" + FIELD_ID + "' = " + fieldUpdated);
+		
+		// Pass updated filed ID to filedUpdated (Marks field as changed for fieldUpdateCheck)
+		fieldUpdated(fieldUpdated);
 	}
 
 	@Override
 	public void insertUpdate(DocumentEvent arg0) {
-		// TODO Auto-generated method stub
-		Object owner = arg0.getDocument().getProperty(FIELD_ID);
-		System.out.println("GenericPostTab - Document: insertUpdate '" + FIELD_ID+"' = "+owner);
+		Object fieldUpdated = arg0.getDocument().getProperty(FIELD_ID);
+		System.out.println("GenericPostTab - Document: insertUpdate '" + FIELD_ID+"' = " + fieldUpdated);
 
-		if (owner ==FIELD_TITLE){
-			//Title Updated
-			System.out.println("GenericPostTab - Document: insertUpdate triggered by "+FIELD_TITLE);
-			
-		}else if (owner == FIELD_TEXT){
-			//Text Updated
-			System.out.println("GenericPostTab - Document: insertUpdate triggered by "+FIELD_TITLE);
-			
-		}else if (owner == FIELD_TAGS){
-			//Tags Updated
-			System.out.println("GenericPostTab - Document: insertUpdate triggered by "+FIELD_TITLE);
-			
-		}
+		// Pass updated filed ID to filedUpdated (Marks field as changed for fieldUpdateCheck)
+		fieldUpdated(fieldUpdated);
 	}
 
 	@Override
 	public void removeUpdate(DocumentEvent arg0) {
-		// TODO Auto-generated method stub
-		Object owner = arg0.getDocument().getProperty(FIELD_ID);
-		System.out.println("GenericPostTab - Document: removeUpdate '" + FIELD_ID+"' = "+owner);
-
-		if (owner ==FIELD_TITLE){
-			//Title Updated
-			System.out.println("GenericPostTab - Document: removeUpdate triggered by "+FIELD_TITLE);
-			
-		}else if (owner == FIELD_TEXT){
-			//Text Updated
-			System.out.println("GenericPostTab - Document: removeUpdate triggered by "+FIELD_TITLE);
-			
-		}else if (owner == FIELD_TAGS){
-			//Tags Updated
-			System.out.println("GenericPostTab - Document: removeUpdate triggered by "+FIELD_TITLE);
-			
-		}
+		Object fieldUpdated = arg0.getDocument().getProperty(FIELD_ID);
+		System.out.println("GenericPostTab - Document: removeUpdate '" + FIELD_ID+"' = " + fieldUpdated);
+		
+		// Pass updated filed ID to filedUpdated (Marks field as changed for fieldUpdateCheck)
+		fieldUpdated(fieldUpdated);
 	}
+
+	// ## Focus Listener Events ##
+	@Override
+	public void focusGained(FocusEvent arg0) {
+		// Do nothing
+	}
+
+	@Override
+	public void focusLost(FocusEvent arg0) {
+		//Send Source to method to check if fields have updated, etc.
+		fieldUpdateCheck(arg0.getSource());		
+	}
+	
+	// #### EVENT LISTENER METHODS ####
+	
 }
