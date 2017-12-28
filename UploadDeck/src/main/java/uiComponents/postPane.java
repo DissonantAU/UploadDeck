@@ -76,7 +76,7 @@ public class postPane extends JSplitPane {
 		postTabs = new ArrayList<postTab>();
 		
 		//Init Generic Tab
-		 genPostTab = new GenericPostTab(this);
+		genPostTab = new GenericPostTab(this);
 		
 		//Set up tabs and add panels
 		jobTabbedPane = new JTabbedPane(JTabbedPane.BOTTOM);
@@ -161,6 +161,16 @@ public class postPane extends JSplitPane {
 		for (postTab tab: postTabs){
 			
 			tab.setJob(currentJob);
+		}
+		
+	}
+	/**
+	 * Lets jobPanel and each active Tab know that the Generic Title has updated
+	 */
+	public void updatedTitle(){
+		jobPanelListener.updateTitle();
+		for (postTab tab: postTabs){
+			tab.updateTitle();
 		}
 		
 	}

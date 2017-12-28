@@ -117,61 +117,72 @@ public class GenericPostTab extends JPanel  implements postTab, DocumentListener
 		
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Does nothing in Generic Tab
 	 * @see sitePlugins.Interfaces.postTab#updateTitle(java.lang.String)
 	 */
-	public void updateTitle(String text) {
-		// TODO Auto-generated method stub
+	public void updateTitle() {}
 
-	}
-
-	/* (non-Javadoc)
+	/**
+	 * Does nothing in Generic Tab
 	 * @see sitePlugins.Interfaces.postTab#updateDescription(java.lang.String)
 	 */
-	public void updateDescription(String text) {
-		// TODO Auto-generated method stub
+	public void updateDescription() {}
 
-	}
-
-	/* (non-Javadoc)
+	/**
+	 * Does nothing in Generic Tab
 	 * @see sitePlugins.Interfaces.postTab#updateTags(java.lang.String)
 	 */
-	public void updateTags(String text) {
-		// TODO Auto-generated method stub
+	public void updateTags() {}
 
-	}
-
-	/* (non-Javadoc)
+	/**
+	 * Does nothing in Generic Tab
 	 * @see sitePlugins.Interfaces.postTab#updateRating(int)
 	 */
-	public void updateRating(int rating) {
-		// TODO Auto-generated method stub
+	public void updateRating() {}
 
-	}
-
-	/* (non-Javadoc)
+	/**
+	 * Does nothing in Generic Tab
 	 * @see sitePlugins.Interfaces.postTab#enableTab()
 	 */
-	public void enableTab() {
-		// TODO Auto-generated method stub
+	public void enableTab() {}
 
-	}
-
-	/* (non-Javadoc)
+	/**
+	 * Does nothing in Generic Tab
 	 * @see sitePlugins.Interfaces.postTab#disableTab()
 	 */
 	public postTab disableTab() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	/**
+	 * Updates Job displayed by Tab
+	 */
 	public void setJob(PostContainer currentJob) {
 		postDataContainer = currentJob;
-		//TODO Update elements
+		
+		updateUIFields();
+	}
+	
+	/**
+	 * Updated all fields from Data Container
+	 */
+	private void updateUIFields(){
+		// Text Fields
+		textTitle.setText(postDataContainer.getTitle());
+		textTags.setText(postDataContainer.getTags());
+		textDescription.setText(postDataContainer.getDescription());
+		
+		// Rating Combo box
+		comboRating.setSelectedIndex(postDataContainer.getPostRating());
 	}
 	
 	// ## Field Change Methods
-	
+	/**
+	 * Marks field as being dirty. On Focus Lost, the new text will be handled by fieldUpdateCheck
+	 * @param fieldUpdated
+	 * @see fieldUpdateCheck
+	 */
 	private void fieldUpdated(Object fieldUpdated){
 		System.out.println("fieldUpdated: '" + FIELD_ID + "' = " + fieldUpdated);
 
@@ -188,14 +199,15 @@ public class GenericPostTab extends JPanel  implements postTab, DocumentListener
 	}
 	
 	/**
-	 * Checks if filed has been marked dirty, passes updated value to postPane and updated postContainer
+	 * Checks if field has been marked dirty, passes updated value to postPane and updated postContainer
 	 * @param updateSource
 	 */
 	private void fieldUpdateCheck(Object updateSource){
 		if (updateSource==textTitle && fieldUpdatedTitle){
 			//if Title Field was updated
-			postDataContainer.setTitle(textTitle.getText());
-
+			postDataContainer.setTitle(textTitle.getText()); //Update Title in data container
+			PostPane.updatedTitle(); // Report update to PostPane
+			
 			fieldUpdatedTitle=false;
 		} else if (updateSource==textDescription && fieldUpdatedText){
 			//if Description Field was updated

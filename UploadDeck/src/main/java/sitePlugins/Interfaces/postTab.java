@@ -19,23 +19,23 @@ public interface postTab {
 	/**
 	 * Triggered when the Title field is updated in the General Tab
 	 */
-	public void updateTitle(String text);
+	public void updateTitle();
 	
 	/**
 	 * Triggered when the Description field is updated in the General Tab
 	 */
-	public void updateDescription(String text);
+	public void updateDescription();
 	
 	/**
 	 * Triggered when the Tags field is updated in the General Tab
 	 */
-	public void updateTags(String text);
+	public void updateTags();
 
 	/**
 	 * Triggered when the Rating Combo Box is updated in the General Tab
 	 * 0 is General, 1 is Mature, 2 is Adult
 	 */
-	public void updateRating(int rating);
+	public void updateRating();
 	
 	/**
 	 * Triggered when site is enabled for post

@@ -213,5 +213,20 @@ public class jobPanel extends JPanel implements ActionListener, ListSelectionLis
 		}
 	}
 
+	/**
+	 * Run when a post's title is updated
+	 */
+	public void updateTitle() {
+		//Update Table
+		uploadTableModel.fireTableCellUpdated(uploadJobTable.getSelectedRow(), 0);
+	}
+
+	/**
+	 * Run when a post's status is updated
+	 */
+	public void updateStatus() {
+		//Update Table
+		uploadTableModel.fireTableCellUpdated(uploadJobTable.getSelectedRow(), 1);
+	}
 
 }
