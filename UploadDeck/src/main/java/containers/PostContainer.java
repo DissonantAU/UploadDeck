@@ -16,18 +16,19 @@ public class PostContainer {
 	
 	
 	//Image
-	Object image;
+	private Object image;
+	private String imagePath;
 	
 	//Generic Values
-	int postUUID; //Internal ID for posts
-	String postTitle, postTags,postDescription;
-	int postRating;
+	private int postUUID; //Internal ID for posts
+	private String postTitle, postTags,postDescription;
+	private int postRating;
 	
-	String postStatus;
+	private String postStatus;
 	
 	
 	
-	HashMap<String,PluginData> postPluginData;
+	private HashMap<String,PluginData> postPluginData;
 	
 	
 	public PostContainer(int PostUUID){

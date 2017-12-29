@@ -26,34 +26,62 @@ import java.beans.PropertyChangeEvent;
 
 public class ExamplePostTab extends JPanel implements postTab {
 
+	//UI Update Tracking
+	private boolean fieldUpdatedTitle, fieldUpdatedText, fieldUpdatedTags;
+	
+	//Customise Field Checkboxes
+	private JCheckBox chckbxCustomiseTitle,chckbxCustomiseDesc,chckbxCustomiseTags,chckbxCustomiseRating;
+	
+	
+	// UI Elements
 	private JTextField textTitle;
 	private JTextField textTags;
-	private JComboBox<String> comboRating;
 	private JTextArea textDescription;
+	private JComboBox<String> comboRating;
 	
+	// Combo Box Values
+	// Should be 0 - General, 1 - Mature, 2 - Adult
 	final private String[] ratingStrings = {"General","Mature","Adult"};
+	
+	//Contains post data
+	private PostContainer postDataContainer;
+	private ExamplePluginData pluginDataContainer;
 
 	public ExamplePostTab() {
 		initPane();
 	}
 	
-	public void updateTitle(String text) {
-		// TODO Auto-generated method stub
+	public void updateTitle() {
+		//TODO Logic in Plugin
+		//If Customise is off, update from generic value
+		if (!pluginDataContainer.isCustomiseTitleEnabled()){
+			textTitle.setText(postDataContainer.getTitle());
+		}
+	}
+
+	public void updateDescription() {
+		//TODO Logic in Plugin
+		//If Customise is off, update from generic value
+		if (!pluginDataContainer.isCustomiseDescEnabled()){
+			textDescription.setText(postDataContainer.getDescription());
+		}
+	}
+
+	public void updateTags() {
+		//TODO Logic in Plugin
+		//If Customise is off, update from generic value
+		if (!pluginDataContainer.isCustomiseTagsEnabled()){
+			textTags.setText(postDataContainer.getTags());
+		}
 
 	}
 
-	public void updateDescription(String text) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void updateTags(String text) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void updateRating(int rating) {
-		// TODO Auto-generated method stub
+	public void updateRating() {
+		//TODO Logic in Plugin
+		//If Customise is off, update from generic value
+		if (!pluginDataContainer.isCustomiseRatingEnabled()){
+			comboRating.setSelectedIndex(postDataContainer.getPostRating());
+		}
 
 	}
 
@@ -67,6 +95,29 @@ public class ExamplePostTab extends JPanel implements postTab {
 		return null;
 	}
 
+	@Override
+	/**
+	 * Updates Job displayed by Tab
+	 */
+	public void setJob(PostContainer currentJob) {
+		postDataContainer = currentJob;
+		
+		updateUIFields();
+	}
+	
+	/**
+	 * Updated all fields from Data Container
+	 */
+	private void updateUIFields(){
+		// Text Fields
+		textTitle.setText(postDataContainer.getTitle());
+		textTags.setText(postDataContainer.getTags());
+		textDescription.setText(postDataContainer.getDescription());
+		
+		// Rating Combo box
+		comboRating.setSelectedIndex(postDataContainer.getPostRating());
+	}
+	
 	private void initPane(){
 		// Create a General Info Panel
 		JPanel TabExamplePanel = this;
@@ -113,17 +164,17 @@ public class ExamplePostTab extends JPanel implements postTab {
 		
 		TabExamplePanel.add(comboRating, "flowx,cell 1 3,growx");
 		
-		JCheckBox chckbxCustomiseTitle = new JCheckBox("Customise");
+		chckbxCustomiseTitle = new JCheckBox("Customise");
 		
 		add(chckbxCustomiseTitle, "cell 1 0,aligny top");
 		
-		JCheckBox chckbxCustomiseDesc = new JCheckBox("Customise");
+		chckbxCustomiseDesc = new JCheckBox("Customise");
 		add(chckbxCustomiseDesc, "cell 1 1,aligny top");
 		
-		JCheckBox chckbxCustomiseTags = new JCheckBox("Customise");
+		chckbxCustomiseTags = new JCheckBox("Customise");
 		add(chckbxCustomiseTags, "cell 1 2,aligny top");
 		
-		JCheckBox chckbxCustomiseRating = new JCheckBox("Customise");
+		chckbxCustomiseRating = new JCheckBox("Customise");
 		add(chckbxCustomiseRating, "cell 1 3,aligny top");
 
 		
@@ -172,11 +223,7 @@ public class ExamplePostTab extends JPanel implements postTab {
 		
 	}
 
-	@Override
-	public void setJob(PostContainer currentJob) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 	
 	
 	
